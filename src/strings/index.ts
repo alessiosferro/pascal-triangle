@@ -1,15 +1,15 @@
 export const strings = {
     app: {
-        title: "Triangolo di Pascal"
+        title: "Pascal's triangle"
     },
     common: {
-        triangleSize: "Dimensione del triangolo",
+        triangleSize: "Triangle size",
     },
     cta: {
-        generate: "Genera"
+        generate: "Generate"
     },
     errors: {
-        numberFormat: "Inserisci un valore numerico",
-        numberRange: "Inserisci un valore tra 2 e 50"
+        numberFormat: "Insert a numeric number.",
+        numberRange: "Insert a value between 1 and 16."
     }
 }

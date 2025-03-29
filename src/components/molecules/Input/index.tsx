@@ -14,7 +14,7 @@ export const Input = (props: InputProps) => {
   const id = props.id || props.name;
 
   return (
-    <div>
+    <div className="flex-1">
       <label
         className="block text-gray-700 text-sm font-bold mb-2"
         htmlFor={id}

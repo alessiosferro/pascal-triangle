@@ -1,77 +1,73 @@
 import { useState } from "react";
-import "./App.css";
 import { Button } from "./components/atoms/Button";
 import { Input } from "./components/molecules/Input";
 import { Header } from "./components/organisms/Header";
 import { strings } from "./strings";
 import { isOdd } from "./utils/isOdd";
+import { getPascalTriangle, PascalTriangle } from "./utils/getPascalTriangle";
+
+const MINIMUM_SIZE = 1;
+const MAXIMUM_SIZE = 32;
 
 function App() {
-  const [triangle, setTriangle] = useState<number[][]>([]);
-
-  function pascalTriangle(triangleSize: number) {
-    let triangle = Array.from({ length: triangleSize }, (_, i) =>
-      Array(i + 1).fill(1)
-    );
-
-    for (let i = 2; i < triangleSize; i++) {
-      for (let j = 1; j < i; j++) {
-        triangle[i][j] = triangle[i - 1][j - 1] + triangle[i - 1][j];
-      }
-    }
-
-    return triangle;
-  }
+  const [triangle, setTriangle] = useState<PascalTriangle>([]);
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+    // Prevent form submission
     event.preventDefault();
 
+    // Parse the data from the input
     const formData = new FormData(event.currentTarget);
     const triangleSize = Number(formData.get("triangle-size"));
 
+    // Simple validation for the triangleSize value
     if (!triangleSize || Number.isNaN(triangleSize)) {
       alert(strings.errors.numberFormat);
       return;
     }
 
-    if (triangleSize < 2 || triangleSize > 32) {
+    if (triangleSize < MINIMUM_SIZE || triangleSize > MAXIMUM_SIZE) {
       alert(strings.errors.numberRange);
       return;
     }
 
-    setTriangle(pascalTriangle(triangleSize));
+    // Calculate the triangle for the given size
+    const triangle = getPascalTriangle(triangleSize);
+
+    // Update the triangle state
+    setTriangle(triangle);
   };
 
   return (
     <>
       <Header />
 
-      <main>
+      <main className="px-4">
         <form
           onSubmit={handleSubmit}
-          className="max-w-132 mt-12 mx-auto flex gap-4 items-end justify-center"
+          className="max-w-132 mt-8 mx-auto flex gap-4 items-end justify-center"
         >
           <Input
             label={strings.common.triangleSize}
             type="number"
-            max={32}
-            min={2}
+            max={MAXIMUM_SIZE}
+            min={MINIMUM_SIZE}
             name="triangle-size"
           />
 
           <Button text={strings.cta.generate} />
         </form>
 
-        <div className="flex flex-col items-center mt-10 gap-2 p-32">
+        <div className="flex flex-col lg:items-center gap-4 my-20">
           {triangle.map((row) => (
-            <div className="flex gap-2">
-              {row.map((value) => (
+            <div className="flex gap-4">
+              {row.map((item) => (
                 <p
                   className={`text-xs p-1 flex items-center justify-center ${
-                    isOdd(value) ? " bg-yellow-400" : ""
+                    isOdd(item.rawValue) ? " bg-yellow-400" : ""
                   }`}
                 >
-                  {value}
+                  {item.formattedValue}
                 </p>
               ))}
             </div>
